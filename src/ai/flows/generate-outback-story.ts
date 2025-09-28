@@ -35,7 +35,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an Australian Outback storyteller. You will generate a unique Outback-themed story based on the provided theme and custom prompt, incorporating Aussie slang if requested.
 
 Theme: {{{theme}}}
-Custom Prompt: {{customPrompt}}
+{{#if customPrompt}}Custom Prompt: {{{customPrompt}}}{{/if}}
 Use Slang: {{#if useSlang}}Yes{{else}}No{{/if}}
 
 Story:`,
