@@ -2,6 +2,8 @@
 
 Sankofa Stories is an AI-powered application that generates creative and engaging stories and poems.
 
+![The Logo]( ./logo.png)
+
 ## Features
 
 *   **AI-Powered Content Generation:** Leverages cutting-edge AI to generate unique stories and poems.
