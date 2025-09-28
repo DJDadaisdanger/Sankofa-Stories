@@ -1,3 +1,4 @@
+
 'use client';
 
 import { Check, Copy, Save } from 'lucide-react';
@@ -51,7 +52,7 @@ export function ResultCard({ content, theme, type }: ResultCardProps) {
         <CardDescription>Based on the theme: "{theme}"</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="whitespace-pre-wrap text-foreground/90 leading-relaxed">{content}</p>
+        <p className={`whitespace-pre-wrap text-foreground/90 leading-relaxed ${type === 'poem' ? 'text-center' : ''}`}>{content}</p>
       </CardContent>
       <CardFooter className="gap-2">
         <Button onClick={handleCopyToClipboard} variant="outline">
