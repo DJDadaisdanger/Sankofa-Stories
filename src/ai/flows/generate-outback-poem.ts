@@ -11,6 +11,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {z} from 'genkit';
 
 const GenerateOutbackPoemInputSchema = z.object({
@@ -22,7 +23,7 @@ export type GenerateOutbackPoemInput = z.infer<typeof GenerateOutbackPoemInputSc
 
 const GenerateOutbackPoemOutputSchema = z.object({
   poem: z.string().describe('The generated Outback-themed poem.'),
-  imageUrl: z.string().describe('A data URI of an image illustrating the poem.').optional(),
+  imageUrl: z.string().describe('A URL of an image illustrating the poem.').optional(),
 });
 export type GenerateOutbackPoemOutput = z.infer<typeof GenerateOutbackPoemOutputSchema>;
 
@@ -56,27 +57,16 @@ const generateOutbackPoemFlow = ai.defineFlow(
     const poemResult = await generateOutbackPoemPrompt(input);
     const output = poemResult.output;
 
-    if (!output) {
+    if (!output || !output.poem) {
       throw new Error('The AI model did not return any output. Please try again.');
     }
     const { poem } = output;
 
-    if (!poem) {
-        throw new Error("Failed to generate poem text.");
-    }
-    
-    // Image generation is optional.
-    let imageUrl;
-    try {
-        // The user's API key does not support image generation.
-        // This functionality is disabled to prevent errors.
-    } catch(e) {
-        console.warn("Could not generate image. Is billing enabled?", e);
-    }
+    const randomImage = PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)];
     
     return {
       poem,
-      imageUrl
+      imageUrl: randomImage.imageUrl,
     };
   }
 );

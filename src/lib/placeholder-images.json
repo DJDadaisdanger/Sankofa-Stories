@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "1",
+      "description": "A vast, sunburnt landscape under a wide-open sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1605235904827-2fc511a86dd0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxvdXRiYWNrJTIwbGFuZHNjYXBlfGVufDB8fHx8MTc1OTA0MTQ1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "outback landscape"
+    },
+    {
+      "id": "2",
+      "description": "Ancient rock formations of the Australian Outback.",
+      "imageUrl": "https://images.unsplash.com/photo-1568596312185-2c3e8f8042c3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHx1bHVydSUyMHJvY2t8ZW58MHx8fHwxNzU5MDEwNTE1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "uluru rock"
+    },
+    {
+      "id": "3",
+      "description": "A tranquil billabong reflecting the sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1644165538756-e4cd84408dd8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxiaWxsYWJvbmclMjB3YXRlcmhvbGV8ZW58MHx8fHwxNzU5MDQxNDU0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "billabong waterhole"
+    },
+    {
+      "id": "4",
+      "description": "A kangaroo silhouetted against an Outback sunset.",
+      "imageUrl": "https://images.unsplash.com/photo-1698658192236-223ff1f57b1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxrYW5nYXJvbyUyMHN1bnNldHxlbnwwfHx8fDE3NTkwNDE0NTR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "kangaroo sunset"
+    },
+    {
+      "id": "5",
+      "description": "The Southern Cross constellation in a clear night sky.",
+      "imageUrl": "https://images.unsplash.com/photo-1507502707541-f369a3b18502?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bmlnaHQlMjBza3l8ZW58MHx8fHwxNzU5MDEzNjcyfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "night sky"
+    },
+    {
+      "id": "6",
+      "description": "An old drover's hut in the high country.",
+      "imageUrl": "https://images.unsplash.com/photo-1678577947964-59e9a5812f2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxvdXRiYWNrJTIwaHV0fGVufDB8fHx8MTc1OTA0MTQ1NHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "outback hut"
+    }
+  ]
 }

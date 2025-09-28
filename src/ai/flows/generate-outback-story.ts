@@ -11,6 +11,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {z} from 'genkit';
 
 const GenerateOutbackStoryInputSchema = z.object({
@@ -22,7 +23,7 @@ export type GenerateOutbackStoryInput = z.infer<typeof GenerateOutbackStoryInput
 
 const GenerateOutbackStoryOutputSchema = z.object({
   story: z.string().describe('The generated Outback story.'),
-  imageUrl: z.string().describe('A data URI of an image illustrating the story.').optional(),
+  imageUrl: z.string().describe('A URL of an image illustrating the story.').optional(),
 });
 export type GenerateOutbackStoryOutput = z.infer<typeof GenerateOutbackStoryOutputSchema>;
 
@@ -55,27 +56,16 @@ const generateOutbackStoryFlow = ai.defineFlow(
     const storyResult = await prompt(input);
     const output = storyResult.output;
     
-    if (!output) {
+    if (!output || !output.story) {
       throw new Error('The AI model did not return any output. Please try again.');
     }
     const { story } = output;
 
-    if (!story) {
-        throw new Error("Failed to generate story text.");
-    }
-    
-    // Image generation is optional.
-    let imageUrl;
-    try {
-        // The user's API key does not support image generation.
-        // This functionality is disabled to prevent errors.
-    } catch(e) {
-        console.warn("Could not generate image. Is billing enabled?", e);
-    }
+    const randomImage = PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)];
     
     return {
       story: story,
-      imageUrl
+      imageUrl: randomImage.imageUrl,
     };
   }
 );
