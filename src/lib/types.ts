@@ -3,6 +3,5 @@ export type SavedItem = {
   type: 'story' | 'poem';
   theme: string;
   content: string;
-  imageUrl?: string; // Add imageUrl for the generated image
   createdAt: string;
 };

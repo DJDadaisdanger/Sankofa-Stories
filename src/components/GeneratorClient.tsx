@@ -194,7 +194,6 @@ export function GeneratorClient({ type }: GeneratorClientProps) {
             <CardTitle>Generating your {type}...</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <Skeleton className="aspect-video w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
@@ -207,7 +206,6 @@ export function GeneratorClient({ type }: GeneratorClientProps) {
           content={type === 'story' ? (result as GenerateOutbackStoryOutput).story : (result as GenerateOutbackPoemOutput).poem}
           theme={resultTheme}
           type={type}
-          imageUrl={result.imageUrl}
         />
       )}
     </div>

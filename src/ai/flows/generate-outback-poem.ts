@@ -11,7 +11,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {z} from 'genkit';
 
 const GenerateOutbackPoemInputSchema = z.object({
@@ -23,7 +22,6 @@ export type GenerateOutbackPoemInput = z.infer<typeof GenerateOutbackPoemInputSc
 
 const GenerateOutbackPoemOutputSchema = z.object({
   poem: z.string().describe('The generated Outback-themed poem.'),
-  imageUrl: z.string().describe('A URL of an image illustrating the poem.').optional(),
 });
 export type GenerateOutbackPoemOutput = z.infer<typeof GenerateOutbackPoemOutputSchema>;
 
@@ -60,13 +58,9 @@ const generateOutbackPoemFlow = ai.defineFlow(
     if (!output || !output.poem) {
       throw new Error('The AI model did not return any output. Please try again.');
     }
-    const { poem } = output;
-
-    const randomImage = PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)];
     
     return {
-      poem,
-      imageUrl: randomImage.imageUrl,
+      poem: output.poem,
     };
   }
 );

@@ -11,7 +11,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {z} from 'genkit';
 
 const GenerateOutbackStoryInputSchema = z.object({
@@ -23,7 +22,6 @@ export type GenerateOutbackStoryInput = z.infer<typeof GenerateOutbackStoryInput
 
 const GenerateOutbackStoryOutputSchema = z.object({
   story: z.string().describe('The generated Outback story.'),
-  imageUrl: z.string().describe('A URL of an image illustrating the story.').optional(),
 });
 export type GenerateOutbackStoryOutput = z.infer<typeof GenerateOutbackStoryOutputSchema>;
 
@@ -59,13 +57,9 @@ const generateOutbackStoryFlow = ai.defineFlow(
     if (!output || !output.story) {
       throw new Error('The AI model did not return any output. Please try again.');
     }
-    const { story } = output;
-
-    const randomImage = PlaceHolderImages[Math.floor(Math.random() * PlaceHolderImages.length)];
     
     return {
-      story: story,
-      imageUrl: randomImage.imageUrl,
+      story: output.story,
     };
   }
 );

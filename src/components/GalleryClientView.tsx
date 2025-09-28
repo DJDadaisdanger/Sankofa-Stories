@@ -22,7 +22,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import Image from "next/image";
 import { ScrollArea } from "./ui/scroll-area";
 
 function SavedItemCard({ item, onDelete }: { item: SavedItem, onDelete: (id: string) => void }) {
@@ -38,11 +37,6 @@ function SavedItemCard({ item, onDelete }: { item: SavedItem, onDelete: (id: str
 
     return (
         <Card className="flex flex-col">
-            {item.imageUrl && (
-                <div className="relative aspect-video w-full overflow-hidden rounded-t-lg">
-                    <Image src={item.imageUrl} alt={`Illustration for ${item.theme}`} fill className="object-cover" />
-                </div>
-            )}
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>
@@ -74,11 +68,6 @@ function SavedItemCard({ item, onDelete }: { item: SavedItem, onDelete: (id: str
                         </DialogHeader>
                         <ScrollArea className="max-h-[60vh] pr-6">
                            <div className="flex flex-col gap-4">
-                             {item.imageUrl && (
-                                <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
-                                    <Image src={item.imageUrl} alt={`Illustration for ${item.theme}`} fill className="object-cover" />
-                                </div>
-                            )}
                             <p className={`whitespace-pre-wrap text-foreground/90 leading-relaxed ${item.type === 'poem' ? 'text-center' : ''}`}>{item.content}</p>
                            </div>
                         </ScrollArea>
