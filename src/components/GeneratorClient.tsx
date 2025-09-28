@@ -75,13 +75,22 @@ export function GeneratorClient({ type }: GeneratorClientProps) {
         useSlang: data.useSlang,
       });
       setResult(response);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error generating ${type}:`, error);
-      toast({
-        variant: 'destructive',
-        title: 'An error occurred',
-        description: `Failed to generate your ${type}. Please try again.`,
-      });
+
+      if (error.message && error.message.includes('503 Service Unavailable')) {
+         toast({
+            variant: 'destructive',
+            title: 'AI Service Temporarily Unavailable',
+            description: 'The service is currently busy. Please wait a moment and try again.',
+        });
+      } else {
+        toast({
+            variant: 'destructive',
+            title: 'An error occurred',
+            description: `Failed to generate your ${type}. Please try again.`,
+        });
+      }
     } finally {
       setIsLoading(false);
     }
