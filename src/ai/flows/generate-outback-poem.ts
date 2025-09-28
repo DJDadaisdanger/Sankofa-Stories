@@ -1,3 +1,4 @@
+
 // src/ai/flows/generate-outback-poem.ts
 'use server';
 
@@ -52,22 +53,28 @@ const generateOutbackPoemFlow = ai.defineFlow(
     outputSchema: GenerateOutbackPoemOutputSchema,
   },
   async input => {
-    const [poemResult, imageResult] = await Promise.all([
-      generateOutbackPoemPrompt(input),
-      ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
-        prompt: `An artistic and slightly abstract watercolor illustration representing the Australian Outback theme for a poem: ${input.theme}. The style should be evocative, beautiful, and a little melancholic.`,
-      })
-    ]);
-
+    const poemResult = await generateOutbackPoemPrompt(input);
     const poem = poemResult.output?.poem;
+
     if (!poem) {
         throw new Error("Failed to generate poem text.");
     }
     
+    // Image generation is optional.
+    let imageUrl;
+    try {
+        const imageResult = await ai.generate({
+            model: 'googleai/imagen-4.0-fast-generate-001',
+            prompt: `An artistic and slightly abstract watercolor illustration representing the Australian Outback theme for a poem: ${input.theme}. The style should be evocative, beautiful, and a little melancholic.`,
+        });
+        imageUrl = imageResult.media.url;
+    } catch(e) {
+        console.warn("Could not generate image. Is billing enabled?", e);
+    }
+    
     return {
       poem,
-      imageUrl: imageResult.media.url
+      imageUrl
     };
   }
 );

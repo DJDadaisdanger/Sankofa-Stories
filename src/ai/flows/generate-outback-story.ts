@@ -1,3 +1,4 @@
+
 // src/ai/flows/generate-outback-story.ts
 'use server';
 
@@ -51,22 +52,28 @@ const generateOutbackStoryFlow = ai.defineFlow(
     outputSchema: GenerateOutbackStoryOutputSchema,
   },
   async input => {
-    const [storyResult, imageResult] = await Promise.all([
-      prompt(input),
-      ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
-        prompt: `An artistic and slightly abstract illustration representing the Australian Outback theme: ${input.theme}. The style should be evocative and beautiful, suitable for a book cover.`,
-      })
-    ]);
-
+    const storyResult = await prompt(input);
     const story = storyResult.output?.story;
+
     if (!story) {
         throw new Error("Failed to generate story text.");
     }
     
+    // Image generation is optional.
+    let imageUrl;
+    try {
+        const imageResult = await ai.generate({
+            model: 'googleai/imagen-4.0-fast-generate-001',
+            prompt: `An artistic and slightly abstract illustration representing the Australian Outback theme: ${input.theme}. The style should be evocative and beautiful, suitable for a book cover.`,
+        });
+        imageUrl = imageResult.media.url;
+    } catch(e) {
+        console.warn("Could not generate image. Is billing enabled?", e);
+    }
+    
     return {
       story: story,
-      imageUrl: imageResult.media.url
+      imageUrl
     };
   }
 );
