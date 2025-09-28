@@ -53,7 +53,12 @@ const generateOutbackStoryFlow = ai.defineFlow(
   },
   async input => {
     const storyResult = await prompt(input);
-    const story = storyResult.output?.story;
+    const output = storyResult.output;
+    
+    if (!output) {
+      throw new Error('The AI model did not return any output. Please try again.');
+    }
+    const { story } = output;
 
     if (!story) {
         throw new Error("Failed to generate story text.");
@@ -62,11 +67,8 @@ const generateOutbackStoryFlow = ai.defineFlow(
     // Image generation is optional.
     let imageUrl;
     try {
-        const imageResult = await ai.generate({
-            model: 'googleai/imagen-4.0-fast-generate-001',
-            prompt: `An artistic and slightly abstract illustration representing the Australian Outback theme: ${input.theme}. The style should be evocative and beautiful, suitable for a book cover.`,
-        });
-        imageUrl = imageResult.media.url;
+        // The user's API key does not support image generation.
+        // This functionality is disabled to prevent errors.
     } catch(e) {
         console.warn("Could not generate image. Is billing enabled?", e);
     }
