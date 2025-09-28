@@ -21,6 +21,7 @@ export type GenerateOutbackStoryInput = z.infer<typeof GenerateOutbackStoryInput
 
 const GenerateOutbackStoryOutputSchema = z.object({
   story: z.string().describe('The generated Outback story.'),
+  imageUrl: z.string().describe('A data URI of an image illustrating the story.').optional(),
 });
 export type GenerateOutbackStoryOutput = z.infer<typeof GenerateOutbackStoryOutputSchema>;
 
@@ -31,14 +32,16 @@ export async function generateOutbackStory(input: GenerateOutbackStoryInput): Pr
 const prompt = ai.definePrompt({
   name: 'generateOutbackStoryPrompt',
   input: {schema: GenerateOutbackStoryInputSchema},
-  output: {schema: GenerateOutbackStoryOutputSchema},
-  prompt: `You are an Australian Outback storyteller. You will generate a unique Outback-themed story based on the provided theme and custom prompt, incorporating Aussie slang if requested.
+  output: {schema: z.object({story: z.string()}) },
+  prompt: `You are a master Australian Outback storyteller, deeply knowledgeable about the ancient cultures, myths, and real-life histories of Australia. Your task is to generate a long, detailed, and engaging story.
+
+The story should be at least 500 words long. Weave in authentic details about the landscape, flora, fauna, and the spirit of the land. If the theme touches on Indigenous culture, do so with the utmost respect and reverence, drawing from known legends and the Dreaming.
 
 Theme: {{{theme}}}
 {{#if customPrompt}}Custom Prompt: {{{customPrompt}}}{{/if}}
 Use Slang: {{#if useSlang}}Yes{{else}}No{{/if}}
 
-Story:`,
+Generate the story now.`,
 });
 
 const generateOutbackStoryFlow = ai.defineFlow(
@@ -48,7 +51,22 @@ const generateOutbackStoryFlow = ai.defineFlow(
     outputSchema: GenerateOutbackStoryOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    const [storyResult, imageResult] = await Promise.all([
+      prompt(input),
+      ai.generate({
+        model: 'googleai/imagen-4.0-fast-generate-001',
+        prompt: `An artistic and slightly abstract illustration representing the Australian Outback theme: ${input.theme}. The style should be evocative and beautiful, suitable for a book cover.`,
+      })
+    ]);
+
+    const story = storyResult.output?.story;
+    if (!story) {
+        throw new Error("Failed to generate story text.");
+    }
+    
+    return {
+      story: story,
+      imageUrl: imageResult.media.url
+    };
   }
 );

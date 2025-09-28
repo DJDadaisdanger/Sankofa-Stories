@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -5,8 +6,9 @@ import { SavedItem } from "@/lib/types";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
 import { format, parseISO } from 'date-fns';
-import { Check, Copy, Trash2, Home, BookOpen, Sparkles } from "lucide-react";
+import { Check, Copy, Trash2, Home, BookOpen, Sparkles, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import {
@@ -20,6 +22,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import Image from "next/image";
+import { ScrollArea } from "./ui/scroll-area";
 
 function SavedItemCard({ item, onDelete }: { item: SavedItem, onDelete: (id: string) => void }) {
     const { toast } = useToast();
@@ -34,31 +38,59 @@ function SavedItemCard({ item, onDelete }: { item: SavedItem, onDelete: (id: str
 
     return (
         <Card className="flex flex-col">
+            {item.imageUrl && (
+                <div className="relative aspect-video w-full overflow-hidden rounded-t-lg">
+                    <Image src={item.imageUrl} alt={`Illustration for ${item.theme}`} fill className="object-cover" />
+                </div>
+            )}
             <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>
                         <CardTitle className="capitalize flex items-center gap-2">
                            {item.type === 'story' ? <BookOpen className="h-5 w-5"/> : <Sparkles className="h-5 w-5"/>}
-                           {item.type}
+                           {item.theme}
                         </CardTitle>
-                        <CardDescription>Theme: {item.theme}</CardDescription>
-                    </div>
-                    <div className="text-xs text-muted-foreground pt-1">
-                        {format(parseISO(item.createdAt), 'MMM d, yyyy')}
+                        <CardDescription>A {item.type} created on {format(parseISO(item.createdAt), 'MMM d, yyyy')}</CardDescription>
                     </div>
                 </div>
             </CardHeader>
             <CardContent className="flex-grow">
-                <p className="whitespace-pre-wrap text-foreground/80 leading-relaxed line-clamp-6">{item.content}</p>
+                <p className="whitespace-pre-wrap text-foreground/80 leading-relaxed line-clamp-4">{item.content}</p>
             </CardContent>
             <CardFooter className="gap-2">
-                <Button onClick={handleCopy} variant="outline" size="sm">
-                    {isCopied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
-                    {isCopied ? 'Copied' : 'Copy'}
+                 <Dialog>
+                    <DialogTrigger asChild>
+                        <Button variant="secondary">
+                            <FileText className="mr-2 h-4 w-4"/>
+                            Read More
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-3xl">
+                        <DialogHeader>
+                            <DialogTitle className="capitalize">{item.theme}</DialogTitle>
+                            <DialogDescription>
+                                A {item.type} created on {format(parseISO(item.createdAt), 'MMM d, yyyy')}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ScrollArea className="max-h-[60vh] pr-6">
+                           <div className="flex flex-col gap-4">
+                             {item.imageUrl && (
+                                <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
+                                    <Image src={item.imageUrl} alt={`Illustration for ${item.theme}`} fill className="object-cover" />
+                                </div>
+                            )}
+                            <p className={`whitespace-pre-wrap text-foreground/90 leading-relaxed ${item.type === 'poem' ? 'text-center' : ''}`}>{item.content}</p>
+                           </div>
+                        </ScrollArea>
+                    </DialogContent>
+                </Dialog>
+
+                <Button onClick={handleCopy} variant="outline" size="icon" aria-label="Copy content">
+                    {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                 </Button>
                  <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="icon">
+                    <Button variant="destructive" size="icon" aria-label="Delete item">
                         <Trash2 className="h-4 w-4" />
                     </Button>
                   </AlertDialogTrigger>
@@ -110,7 +142,7 @@ export function GalleryClientView() {
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gallery.map(item => (
+            {gallery.sort((a,b) => parseISO(b.createdAt).getTime() - parseISO(a.createdAt).getTime()).map(item => (
                 <SavedItemCard key={item.id} item={item} onDelete={handleDelete} />
             ))}
         </div>

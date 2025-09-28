@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -6,8 +7,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Wand2 } from 'lucide-react';
 
-import { generateOutbackStory } from '@/ai/flows/generate-outback-story';
-import { generateOutbackPoem } from '@/ai/flows/generate-outback-poem';
+import { generateOutbackStory, GenerateOutbackStoryOutput } from '@/ai/flows/generate-outback-story';
+import { generateOutbackPoem, GenerateOutbackPoemOutput } from '@/ai/flows/generate-outback-poem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -43,7 +44,7 @@ const FormSchema = z.object({
 
 export function GeneratorClient({ type }: GeneratorClientProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<string | null>(null);
+  const [result, setResult] = useState<GenerateOutbackStoryOutput | GenerateOutbackPoemOutput | null>(null);
   const [resultTheme, setResultTheme] = useState('');
   const { toast } = useToast();
 
@@ -73,12 +74,7 @@ export function GeneratorClient({ type }: GeneratorClientProps) {
         customPrompt: data.customPrompt,
         useSlang: data.useSlang,
       });
-
-      if (type === 'story') {
-        setResult((response as { story: string }).story);
-      } else {
-        setResult((response as { poem: string }).poem);
-      }
+      setResult(response);
     } catch (error) {
       console.error(`Error generating ${type}:`, error);
       toast({
@@ -198,20 +194,20 @@ export function GeneratorClient({ type }: GeneratorClientProps) {
             <CardTitle>Generating your {type}...</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            <Skeleton className="aspect-video w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-1/2" />
           </CardContent>
         </Card>
       )}
 
       {result && !isLoading && (
         <ResultCard
-          content={result}
+          content={type === 'story' ? (result as GenerateOutbackStoryOutput).story : (result as GenerateOutbackPoemOutput).poem}
           theme={resultTheme}
           type={type}
+          imageUrl={result.imageUrl}
         />
       )}
     </div>

@@ -8,14 +8,16 @@ import type { SavedItem } from '@/lib/types';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { useToast } from '@/hooks/use-toast';
+import Image from 'next/image';
 
 interface ResultCardProps {
   content: string;
   theme: string;
   type: 'story' | 'poem';
+  imageUrl?: string;
 }
 
-export function ResultCard({ content, theme, type }: ResultCardProps) {
+export function ResultCard({ content, theme, type, imageUrl }: ResultCardProps) {
   const { toast } = useToast();
   const [gallery, setGallery] = useLocalStorage<SavedItem[]>('sankofa-gallery', []);
   const [isCopied, setIsCopied] = useState(false);
@@ -36,6 +38,7 @@ export function ResultCard({ content, theme, type }: ResultCardProps) {
       type,
       theme,
       content,
+      imageUrl,
       createdAt: new Date().toISOString(),
     };
     setGallery([newItem, ...gallery]);
@@ -51,7 +54,12 @@ export function ResultCard({ content, theme, type }: ResultCardProps) {
         <CardTitle>Your {type}</CardTitle>
         <CardDescription>Based on the theme: "{theme}"</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
+        {imageUrl && (
+            <div className="relative aspect-video w-full rounded-lg overflow-hidden border">
+                <Image src={imageUrl} alt={`Illustration for ${theme}`} fill className="object-cover" />
+            </div>
+        )}
         <p className={`whitespace-pre-wrap text-foreground/90 leading-relaxed ${type === 'poem' ? 'text-center' : ''}`}>{content}</p>
       </CardContent>
       <CardFooter className="gap-2">

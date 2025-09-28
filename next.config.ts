@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+    // Allow data URIs
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    contentDispositionType: 'inline',
   },
 };
 
